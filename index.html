@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rent Receipt - Horizontal Fix</title>
+<style>
+  /* Prevents vertical stacking */
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #222;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+  }
+
+  .controls {
+    margin-bottom: 20px;
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    display: block;
+  }
+
+  button {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  /* Force Horizontal Layout */
+  #receipt-area {
+    background-color: #fceb15 !important;
+    width: 330mm; /* Extra width */
+    height: 130mm; /* Fixed height to prevent 2nd page */
+    padding: 8mm;
+    display: flex;
+    flex-direction: row; /* Force side-by-side */
+    gap: 15px;
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .receipt-half {
+    border: 1.5px dashed #000;
+    padding: 15px 25px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100%; /* Stay within the 130mm limit */
+  }
+
+  .header { text-align: center; margin-bottom: 8px; }
+  .villa-name { font-size: 13px; margin-bottom: 2px; font-weight: bold; }
+  .title { font-size: 28px; font-weight: bold; margin: 5px 0 12px 0; }
+  .badge { border: 2px solid #000; border-radius: 8px; display: inline-block; padding: 4px 20px; font-weight: bold; font-size: 17px; }
+  
+  .form-row { display: flex; margin-bottom: 12px; align-items: flex-end; }
+  .label { white-space: nowrap; margin-right: 5px; font-size: 17px; font-weight: bold;}
+  .line { flex-grow: 1; border-bottom: 2px dotted #000; min-height: 1.2em; }
+  
+  .signatures { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 5px;}
+  .sig-line { border-top: 1.5px dotted #000; padding-top: 5px; font-size: 15px; width: 42%; text-align: center; font-weight: bold;}
+
+  @media print {
+    body { background: none; padding: 0; }
+    .controls { display: none; }
+    
+    @page {
+      size: 330mm 130mm; /* Tells printer the exact shape */
+      margin: 0;
+    }
+
+    #receipt-area {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  /* Viewing on screen */
+  @media screen and (max-width: 1000px) {
+    #receipt-area {
+      transform: scale(0.3);
+      transform-origin: top center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <button onclick="window.print()">Download / Print PDF</button>
+  <p style="font-size: 14px; color: #666;">Important: Select <b>Landscape</b> in print settings.</p>
+</div>
+
+<div id="receipt-area">
+  <div class="receipt-half">
+    <div class="header">
+      <div class="villa-name">আনারুল ইসলাম ভিলা</div>
+      <div class="title">ভাড়া আদায়ের রশিদ</div>
+      <div class="badge">মালিকের অংশ</div>
+    </div>
+    <div class="form-row"><div class="label">রুম নাম্বার:</div><div class="line"></div><div class="label" style="margin-left:15px;">তারিখ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">নাম:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">ভাড়া:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">পানি:</div><div class="line"></div><div class="label" style="margin-left:15px;">বিদ্যুৎ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">বকেয়া:</div><div class="line"></div><div class="label" style="margin-left:15px;">গ্যাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মোট:</div><div class="line"></div><div class="label">টাকা</div></div>
+    <div class="signatures"><div class="sig-line">ভাড়াটিয়ার স্বাক্ষর</div><div class="sig-line">মালিকের স্বাক্ষর</div></div>
+  </div>
+
+  <div class="receipt-half">
+    <div class="header">
+      <div class="villa-name">আনারুল ইসলাম ভিলা</div>
+      <div class="title">ভাড়া আদায়ের রশিদ</div>
+      <div class="badge">ভাড়াটিয়ার অংশ</div>
+    </div>
+    <div class="form-row"><div class="label">রুম নাম্বার:</div><div class="line"></div><div class="label" style="margin-left:15px;">তারিখ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">নাম:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">ভাড়া:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">পানি:</div><div class="line"></div><div class="label" style="margin-left:15px;">বিদ্যুৎ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">বকেয়া:</div><div class="line"></div><div class="label" style="margin-left:15px;">গ্যাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মোট:</div><div class="line"></div><div class="label">টাকা</div></div>
+    <div class="signatures"><div class="sig-line">ভাড়াটিয়ার স্বাক্ষর</div><div class="sig-line">মালিকের স্বাক্ষর</div></div>
+  </div>
+</div>
+
+</body>
+</html>
