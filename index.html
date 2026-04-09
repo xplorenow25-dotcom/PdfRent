@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>Rent Receipt Creator</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+  body {
+    background-color: #333; /* Dark background for the web view */
+    font-family: 'SolaimanLipi', Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 0;
+  }
+
+  /* The Download Button Style */
+  #download-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+  }
+  
+  #download-btn:hover { background-color: #0056b3; }
+
+  /* The Receipt Container */
+  #receipt-content {
+    background-color: #fceb15;
+    width: 280mm;
+    height: 130mm;
+    padding: 10mm;
+    display: flex;
+    gap: 15px;
+    box-sizing: border-box;
+    border: 1px solid #999;
+  }
+
+  .receipt-half {
+    border: 1px dashed #000;
+    padding: 15px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    background-color: #fceb15;
+  }
+
+  .header { text-align: center; margin-bottom: 15px; }
+  .villa-name { font-size: 11px; margin-bottom: 3px; }
+  .title { font-size: 22px; font-weight: bold; text-decoration: underline; text-underline-offset: 4px; margin: 2px 0 10px 0; }
+  .badge { border: 1.5px solid #000; border-radius: 6px; display: inline-block; padding: 3px 15px; font-weight: bold; font-size: 14px; }
+  
+  .form-row { display: flex; margin-bottom: 14px; align-items: flex-end; }
+  .label { white-space: nowrap; margin-right: 5px; font-size: 14px; font-weight: bold;}
+  .line { flex-grow: 1; border-bottom: 1.5px dotted #000; }
+  
+  .signatures { display: flex; justify-content: space-between; margin-top: auto; padding-bottom: 10px;}
+  .sig-line { border-top: 1px dotted #000; padding-top: 5px; font-size: 13px; width: 40%; text-align: center;}
+
+  /* Hide button during PDF generation */
+  @media print { #download-btn { display: none; } }
+</style>
+</head>
+<body>
+
+<button id="download-btn">Download PDF</button>
+
+<div id="receipt-content">
+  <div class="receipt-half">
+    <div class="header">
+      <div class="villa-name">এইচ আর এল ভিলা</div>
+      <div class="title">ভাড়া আদায়ের রশিদ</div>
+      <div class="badge">মালিকের অংশ</div>
+    </div>
+    <div class="form-row"><div class="label">রুম নাম্বার:</div><div class="line"></div><div class="label" style="margin-left:15px;">তারিখ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">নাম:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">ভাড়া:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">পানি:</div><div class="line"></div><div class="label" style="margin-left:15px;">বিদ্যুৎ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">বকেয়া:</div><div class="line"></div><div class="label" style="margin-left:15px;">গ্যাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মোট:</div><div class="line"></div><div class="label">টাকা</div></div>
+    <div class="signatures"><div class="sig-line">ভাড়াটির স্বাক্ষর</div><div class="sig-line">মালিকের স্বাক্ষর</div></div>
+  </div>
+
+  <div class="receipt-half">
+    <div class="header">
+      <div class="villa-name">এইচ আর এল ভিলা</div>
+      <div class="title">ভাড়া আদায়ের রশিদ</div>
+      <div class="badge">ভাড়াটির অংশ</div>
+    </div>
+    <div class="form-row"><div class="label">রুম নাম্বার:</div><div class="line"></div><div class="label" style="margin-left:15px;">তারিখ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">নাম:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">ভাড়া:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">পানি:</div><div class="line"></div><div class="label" style="margin-left:15px;">বিদ্যুৎ:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">বকেয়া:</div><div class="line"></div><div class="label" style="margin-left:15px;">গ্যাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মাস:</div><div class="line"></div></div>
+    <div class="form-row"><div class="label">মোট:</div><div class="line"></div><div class="label">টাকা</div></div>
+    <div class="signatures"><div class="sig-line">ভাড়াটির স্বাক্ষর</div><div class="sig-line">মালিকের স্বাক্ষর</div></div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('download-btn').addEventListener('click', function () {
+    const element = document.getElementById('receipt-content');
+    const opt = {
+      margin:       0,
+      filename:     'Rent_Receipt.pdf',
+      image:        { type: 'jpeg', quality: 1 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'mm', format:, orientation: 'landscape' }
+    };
+
+    // New Promise-based usage:
+    html2pdf().set(opt).from(element).save();
+  });
+</script>
+
+</body>
+</html>
